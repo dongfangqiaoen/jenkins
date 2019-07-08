@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
 
+
+println "===============Environment==============="
+println("version     : ${VERSION}")
+
+def so_version = "${VERSION}"
+println "===============Environment===============\n"
+
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,4 +31,33 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+}
+
+
+/**
+ * Jenkins中打包
+ * Jenkins中配置 IS_SNAPSHOT BUILD_SO_VERSION属性
+ * 打包时将属性同步到gradle.properties中
+ */
+task buildInJenkins(dependsOn: "assembleRelease") {
+    doLast {
+        def resourceFile = "gradle.properties"
+        def readProps = new Properties()
+        new File(resourceFile).withInputStream {
+            stream -> readProps.load(stream)
+        }
+        println "VERSION " + readProps["VERSION"]
+
+        def writeProps = new Properties()
+        FileInputStream fis = new FileInputStream(resourceFile)
+        writeProps.load(fis)
+        fis.close()
+
+        println "write data to gradle.properties ? ${so_version} : ${so_version}"
+
+        writeProps.setProperty("VERSION", "${so_version}")
+        FileOutputStream fos = new FileOutputStream(resourceFile)
+        writeProps.store(fos, "auto create by gradle")
+        fos.close()
+    }
 }
