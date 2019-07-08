@@ -74,8 +74,8 @@ task autoGitAdd(type: Exec) {
     dependsOn autoCommitProperties
     def prop = "../gradle.properties"
     println "git add $prop"
-    commandLine 'git','config','user.name',"dongfangqiaoen"
-    commandLine 'git','config','user.email',"dongfangqiaoen@gmail.com"
+    commandLine 'git','config','--global','user.name',"dongfangqiaoen"
+    commandLine 'git','config','--global','user.email',"dongfangqiaoen@gmail.com"
     commandLine 'git', 'add', prop
 }
 
