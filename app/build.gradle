@@ -74,8 +74,6 @@ task autoGitAdd(type: Exec) {
     dependsOn autoCommitProperties
     def prop = "../gradle.properties"
     println "git add $prop"
-    commandLine 'git','config','--global','user.name',"dongfangqiaoen"
-    commandLine 'git','config','--global','user.email',"dongfangqiaoen@gmail.com"
     commandLine 'git', 'add', prop
 }
 
@@ -86,7 +84,7 @@ task autoGitCommit(type: Exec) {
 
 task autoGitPush(type: Exec) {
     dependsOn autoGitCommit
-    commandLine 'git', 'push', 'origin', "$gitBranch"
+    commandLine 'git', 'push', 'origin', "HEAD:$gitBranch"
 }
 
 task getBranch(){
